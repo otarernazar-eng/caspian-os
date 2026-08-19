@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @id @default(uuid())
+  email          String        @unique
+  password       String
+  role           String        // ADMIN, GOVERNMENT, PORT_OPERATOR, LOGISTICS_OPERATOR, DRIVER, CARGO_OWNER, RECEIVER
+  name           String
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  driverProfile  DriverProfile?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  type      String   // LOGISTICS, PORT, GOVERNMENT, BUSINESS
+  users     User[]
+  vehicles  Vehicle[]
+  createdAt DateTime @default(now())
+}
+
+model Vehicle {
+  id             String       @id @default(uuid())
+  licensePlate   String       @unique
+  type           String       // TRUCK, TRAIN, VESSEL
+  capacity       Float
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  shipments      Shipment[]
+  status         String       @default("AVAILABLE")
+}
+
+model DriverProfile {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  status    String     @default("AVAILABLE")
+  shipments Shipment[]
+}
+
+model Shipment {
+  id               String            @id @default(uuid())
+  trackingId       String            @unique
+  status           String            // CREATED, IN_TRANSIT, DELIVERED, DELAYED
+  origin           String
+  destination      String
+  currentLat       Float?
+  currentLng       Float?
+  eta              DateTime?
+  originalEta      DateTime?
+  vehicleId        String?
+  vehicle          Vehicle?          @relation(fields: [vehicleId], references: [id])
+  driverId         String?
+  driver           DriverProfile?    @relation(fields: [driverId], references: [id])
+  cargo            Cargo[]
+  locationEvents   LocationEvent[]
+  temperatureEvents TemperatureEvent[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Cargo {
+  id            String         @id @default(uuid())
+  type          String
+  weight        Float
+  temperature   Float?
+  shipmentId    String
+  shipment      Shipment       @relation(fields: [shipmentId], references: [id])
+  cargoPassport CargoPassport?
+}
+
+model CargoPassport {
+  id           String   @id @default(uuid())
+  cargoId      String   @unique
+  cargo        Cargo    @relation(fields: [cargoId], references: [id])
+  qrCode       String   @unique
+  status       String   // VERIFIED, PENDING
+  lastVerified DateTime @default(now())
+}
+
+model LocationEvent {
+  id         String   @id @default(uuid())
+  shipmentId String
+  shipment   Shipment @relation(fields: [shipmentId], references: [id])
+  lat        Float
+  lng        Float
+  status     String
+  timestamp  DateTime @default(now())
+}
+
+model TemperatureEvent {
+  id         String   @id @default(uuid())
+  shipmentId String
+  shipment   Shipment @relation(fields: [shipmentId], references: [id])
+  temperature Float
+  timestamp  DateTime @default(now())
+}
+
+model Bottleneck {
+  id              String   @id @default(uuid())
+  location        String
+  severity        String   // YELLOW, RED
+  lat             Float
+  lng             Float
+  affectedCount   Int
+  averageDelay    Float
+  economicImpact  Float
+  rootCause       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Complaint {
+  id          String   @id @default(uuid())
+  category    String   // Late delivery, Temperature, etc.
+  description String
+  location    String?
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  actor     String
+  details   String
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
