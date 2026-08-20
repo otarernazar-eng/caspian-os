@@ -53,7 +53,7 @@ export default function RegisterPage() {
       <div className="max-w-md w-full animate-fade-in-up">
         <Link href="/" className="inline-flex items-center gap-2 mb-8 text-text3 hover:text-text1 transition-colors">
           <Activity className="w-5 h-5 text-accentWarm" />
-          <span className="font-semibold tracking-tight text-xl">CaspianOS</span>
+          <span className="font-semibold tracking-tight text-xl">RayCast</span>
         </Link>
         
         <div className="card">

@@ -67,7 +67,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               <Satellite className="w-3 h-3" />
               LIVE SATELLITE SYNC
             </div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2">CASPIAN OS</h1>
+            <h1 className="text-3xl font-bold tracking-tight mb-2">RAYCAST</h1>
           <div className="text-text4 font-mono text-sm uppercase">Tracking Code: {order.id.slice(0, 8)}</div>
           
           <div className="mt-6 flex flex-col items-center gap-2">
@@ -110,7 +110,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-bold text-text1">Shipment Created</h3>
               </div>
-              <div className="text-sm text-text3">Order received and registered on the Caspian OS Exchange.</div>
+              <div className="text-sm text-text3">Order received and registered on the RayCast Exchange.</div>
             </div>
           </div>
 

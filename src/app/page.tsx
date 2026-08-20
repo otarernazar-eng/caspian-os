@@ -13,7 +13,7 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-text1 leading-tight mb-6">
-            Caspian OS
+            RayCast
           </h1>
           <h2 className="text-[32px] md:text-[48px] font-medium text-text2 italic leading-tight">
             Оптимизация логистики<br/>

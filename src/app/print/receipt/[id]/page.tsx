@@ -14,7 +14,7 @@ export default async function PrintReceipt({ params }: { params: { id: string } 
   return (
     <div className="bg-white text-black min-h-screen p-4 flex justify-center font-sans">
       <div className="w-[80mm] border-2 border-black p-4 flex flex-col items-center text-center bg-white" style={{ fontFamily: 'monospace' }}>
-        <h1 className="text-2xl font-bold uppercase mb-2">CASPIAN OS</h1>
+        <h1 className="text-2xl font-bold uppercase mb-2">RAYCAST</h1>
         <div className="text-sm font-bold uppercase border-y border-black py-1 w-full">DELIVERY CONFIRMED</div>
         
         <div className="w-full text-left mt-4 space-y-2 text-sm">
@@ -29,7 +29,7 @@ export default async function PrintReceipt({ params }: { params: { id: string } 
         <div className="w-full h-px border-t-2 border-dashed border-black my-6"></div>
         
         <div className="text-xl font-bold">✓ DELIVERED</div>
-        <div className="text-xs mt-2">Thank you for using Caspian OS!</div>
+        <div className="text-xs mt-2">Thank you for using RayCast!</div>
 
         {/* Auto-print script for convenience */}
         <script dangerouslySetInnerHTML={{

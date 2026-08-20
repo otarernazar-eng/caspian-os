@@ -17,7 +17,7 @@ export default async function PrintLabel({ params, searchParams }: { params: { i
   return (
     <div className="bg-white text-black min-h-screen p-4 flex justify-center font-sans">
       <div className="w-[80mm] border-2 border-black p-4 flex flex-col items-center text-center bg-white" style={{ fontFamily: 'monospace' }}>
-        <h1 className="text-2xl font-bold uppercase mb-2">CASPIAN OS</h1>
+        <h1 className="text-2xl font-bold uppercase mb-2">RAYCAST</h1>
         <div className="w-full h-px bg-black my-2"></div>
         
         <div className="text-lg font-bold mb-1">SHIPMENT #{order.id.slice(0, 8)}</div>
