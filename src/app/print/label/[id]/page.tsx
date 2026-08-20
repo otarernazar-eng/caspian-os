@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
-export default async function PrintLabel({ params }: { params: { id: string } }) {
+export default async function PrintLabel({ params, searchParams }: { params: { id: string }, searchParams: { origin?: string } }) {
   const order = await prisma.order.findUnique({
     where: { id: params.id }
   });
@@ -10,7 +10,8 @@ export default async function PrintLabel({ params }: { params: { id: string } })
   if (!order) return notFound();
 
   // URL for the public tracking page (assumes deployment root, dynamically we might need a fixed domain, but for demo we can use relative or a mock)
-  const trackingUrl = `https://caspian-os.vercel.app/track/${order.id}`;
+  const origin = searchParams.origin || "https://caspian-os.vercel.app";
+  const trackingUrl = `${origin}/track/${order.id}`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(trackingUrl)}`;
 
   return (

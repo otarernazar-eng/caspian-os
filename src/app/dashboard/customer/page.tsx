@@ -10,6 +10,7 @@ export default function CustomerDashboard() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newlyCreatedOrderId, setNewlyCreatedOrderId] = useState<string | null>(null);
+  const [appOrigin, setAppOrigin] = useState("https://caspian-os.vercel.app");
   const router = useRouter();
 
   // Form State
@@ -34,6 +35,9 @@ export default function CustomerDashboard() {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAppOrigin(window.location.origin);
+    }
     fetchOrders();
     const interval = setInterval(fetchOrders, 5000);
     return () => clearInterval(interval);
@@ -148,7 +152,7 @@ export default function CustomerDashboard() {
                   </div>
                   
                   <div className="mt-4 pt-4 border-t border-border1">
-                    <Link href={`/print/label/${order.id}`} target="_blank" className="btn bg-surface2 text-text2 hover:text-text1 hover:bg-surface3 border border-border2 w-full justify-center">
+                    <Link href={`/print/label/${order.id}?origin=${encodeURIComponent(appOrigin)}`} target="_blank" className="btn bg-surface2 text-text2 hover:text-text1 hover:bg-surface3 border border-border2 w-full justify-center">
                       <Printer className="w-4 h-4 mr-2" /> Print QR Label
                     </Link>
                   </div>
@@ -211,7 +215,7 @@ export default function CustomerDashboard() {
             <div className="bg-white p-4 rounded-xl mb-6 shadow-[0_0_20px_rgba(124,248,229,0.3)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`https://caspian-os.vercel.app/track/${newlyCreatedOrderId}`)}`} 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`${appOrigin}/track/${newlyCreatedOrderId}`)}`} 
                 alt="Tracking QR Code" 
                 width={200} 
                 height={200} 
@@ -220,7 +224,7 @@ export default function CustomerDashboard() {
 
             <div className="flex flex-col w-full gap-3">
               <a 
-                href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(`https://caspian-os.vercel.app/track/${newlyCreatedOrderId}`)}`} 
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(`${appOrigin}/track/${newlyCreatedOrderId}`)}`} 
                 download={`RayCast_QR_${newlyCreatedOrderId.slice(0,8)}.png`} 
                 target="_blank" 
                 className="btn bg-accentWarm text-bg hover:bg-[#d49938] border-none flex-1 w-full justify-center font-bold"
@@ -228,7 +232,7 @@ export default function CustomerDashboard() {
                 Download QR Image
               </a>
               <button 
-                onClick={() => window.open(`/print/label/${newlyCreatedOrderId}`, '_blank')} 
+                onClick={() => window.open(`/print/label/${newlyCreatedOrderId}?origin=${encodeURIComponent(appOrigin)}`, '_blank')} 
                 className="btn bg-surface2 text-text1 hover:bg-surface3 border border-border2 flex-1 w-full justify-center"
               >
                 <Printer className="w-4 h-4 mr-2" /> Print Thermal Label
