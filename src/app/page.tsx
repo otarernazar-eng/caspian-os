@@ -12,8 +12,8 @@ export default function LandingPage() {
             <span className="text-xs font-mono text-text2 uppercase tracking-widest">Mangistau Regional Logistics MVP</span>
           </div>
 
-          <h1 className="text-[64px] md:text-[88px] font-bold leading-tight tracking-tight">
-            Мангистау Биржа
+          <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-text1 leading-tight mb-6">
+            Caspian OS
           </h1>
           <h2 className="text-[32px] md:text-[48px] font-medium text-text2 italic leading-tight">
             Оптимизация логистики<br/>
