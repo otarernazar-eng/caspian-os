@@ -48,7 +48,35 @@ export async function GET() {
       totalEconomicImpactKzt: (fuelSavedLiters * 295).toFixed(0) // 295 KZT per liter of diesel
     };
 
-    return NextResponse.json({ couriers, customers, orders, ecoMetrics });
+    // Infrastructure Planning Analytics
+    // Case requirement: "Акимат не видит реальной картины грузоперевозок для планирования дорог"
+    // Solution: We analyze 2GIS distance vs estimated time to find "Low Speed Zones" (Bad Roads)
+    const bottlenecks = orders
+      .filter(o => o.distance && o.estimatedTime)
+      .map(o => {
+        const distKm = o.distance! / 1000;
+        const timeHours = o.estimatedTime! / 3600;
+        const avgSpeed = distKm / timeHours;
+        return {
+          address: o.destAddress,
+          speed: avgSpeed,
+          distKm
+        };
+      })
+      .filter(b => b.speed < 40 && b.distKm > 5) // Speed < 40 km/h on routes longer than 5km indicates bad road quality
+      .sort((a, b) => a.speed - b.speed);
+
+    // Group bottlenecks by address to find recurring bad roads
+    const roadIssues = bottlenecks.reduce((acc: any, b) => {
+      if (!acc[b.address]) acc[b.address] = { address: b.address, reports: 0, avgSpeed: 0 };
+      acc[b.address].reports += 1;
+      acc[b.address].avgSpeed = (acc[b.address].avgSpeed + b.speed) / 2; // naive moving avg
+      return acc;
+    }, {});
+
+    const topBadRoads = Object.values(roadIssues).sort((a: any, b: any) => b.reports - a.reports).slice(0, 5);
+
+    return NextResponse.json({ couriers, customers, orders, ecoMetrics, badRoads: topBadRoads });
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

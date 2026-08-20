@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart } from "lucide-react";
+import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart, HardHat } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -124,6 +124,35 @@ export default function GovernmentDashboard() {
           </div>
 
         </div>
+
+        {/* AI Road Infrastructure Planning */}
+        {data.badRoads && data.badRoads.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <HardHat className="w-5 h-5 text-text3" /> Infrastructure Planning: Bad Roads Detected
+            </h2>
+            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4">
+              <p className="text-sm text-yellow-500/80 mb-4">
+                Based on real-time 2GIS ETA vs Distance calculations, these destinations have abnormally low average speeds (&lt; 40 km/h). The Akimat should prioritize these routes for road repairs.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {data.badRoads.map((road: any, idx: number) => (
+                  <div key={idx} className="bg-bg/50 p-3 rounded-lg border border-border1">
+                    <div className="font-semibold text-text1">{road.address}</div>
+                    <div className="text-xs mt-2 flex justify-between">
+                      <span className="text-text4">Avg Speed:</span>
+                      <span className="text-red-400 font-bold">{Math.round(road.avgSpeed)} km/h</span>
+                    </div>
+                    <div className="text-xs mt-1 flex justify-between">
+                      <span className="text-text4">Reports:</span>
+                      <span>{road.reports} deliveries</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Orders / Trade Routes */}
         <div className="space-y-4">

@@ -139,7 +139,17 @@ export default function CourierDashboard() {
                  </div>
                )}
 
-               <button className="btn w-full justify-center mt-6 py-4 bg-accentWarm text-bg hover:bg-[#d49938] border-none text-base font-semibold">
+               <button 
+                 onClick={async () => {
+                   await fetch("/api/dashboard/courier/orders/complete", {
+                     method: "POST",
+                     headers: { "Content-Type": "application/json" },
+                     body: JSON.stringify({ orderId: data.activeOrder.id })
+                   });
+                   fetchData();
+                 }}
+                 className="btn w-full justify-center mt-6 py-4 bg-accentWarm text-bg hover:bg-[#d49938] border-none text-base font-semibold"
+               >
                  Complete Delivery
                </button>
             </div>
