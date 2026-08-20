@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST() {
+  return handleSeed();
+}
+
+export async function GET() {
+  return handleSeed();
+}
+
+async function handleSeed() {
   try {
     // Get first customer and courier
     const customer = await prisma.user.findFirst({ where: { role: "CUSTOMER" } });
