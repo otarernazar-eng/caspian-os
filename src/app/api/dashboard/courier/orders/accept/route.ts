@@ -19,7 +19,11 @@ export async function POST(req: Request) {
     // Call 2GIS Routing API
     // 2GIS API typically requires start (courierLat, courierLng) and end (destLat, destLng)
     // We will use standard 2GIS directions API
-    const apiKey = process.env.TWOGIS_API_KEY || "09ce5faf-9ec3-47c1-8329-9560c544c79f"; 
+    const apiKey = process.env.TWOGIS_API_KEY;
+    if (!apiKey) {
+      console.error("Missing TWOGIS_API_KEY in environment variables");
+      return NextResponse.json({ error: "Routing service configuration error" }, { status: 500 });
+    }
     let routeGeometry = null;
     let distance = null;
     let estimatedTime = null;
@@ -44,9 +48,8 @@ export async function POST(req: Request) {
              const bestRoute = routeData.result[0];
              distance = bestRoute.total_distance;
              estimatedTime = bestRoute.total_duration;
-             // Just store the WKT or whatever geometry they return
-             // Usually it's in geometry.selection or similar
-             routeGeometry = JSON.stringify(bestRoute); 
+             // Extract WKT LINESTRING from 2GIS response
+             routeGeometry = bestRoute.geometry?.selection || null;
            }
         }
       } catch (err) {

@@ -9,6 +9,16 @@ const MapContainer = dynamic(() => import("react-leaflet").then(m => m.MapContai
 const TileLayer = dynamic(() => import("react-leaflet").then(m => m.TileLayer), { ssr: false });
 const Marker = dynamic(() => import("react-leaflet").then(m => m.Marker), { ssr: false });
 const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: false });
+const Polyline = dynamic(() => import("react-leaflet").then(m => m.Polyline), { ssr: false });
+
+const parseWKT = (wkt: string) => {
+  if (!wkt || !wkt.startsWith("LINESTRING")) return [];
+  const coordsStr = wkt.replace("LINESTRING(", "").replace(")", "");
+  return coordsStr.split(",").map(pair => {
+    const [lng, lat] = pair.trim().split(" ");
+    return [parseFloat(lat), parseFloat(lng)];
+  });
+};
 
 export default function LogisticsMap({ orders }: { orders: any[] }) {
   const [mounted, setMounted] = useState(false);
@@ -55,7 +65,7 @@ export default function LogisticsMap({ orders }: { orders: any[] }) {
              </Marker>
           )}
 
-          {o.courier?.courierProfile?.lastLat && o.courier?.courierProfile?.lastLng && (
+           {o.courier?.courierProfile?.lastLat && o.courier?.courierProfile?.lastLng && (
              <Marker position={[o.courier.courierProfile.lastLat, o.courier.courierProfile.lastLng]} icon={courierIcon}>
                <Popup className="custom-popup">
                  <div className="p-2">
@@ -64,6 +74,13 @@ export default function LogisticsMap({ orders }: { orders: any[] }) {
                  </div>
                </Popup>
              </Marker>
+          )}
+
+          {o.routeGeometry && (
+             <Polyline 
+               positions={parseWKT(o.routeGeometry)} 
+               pathOptions={{ color: '#ef4444', weight: 4, opacity: 0.8 }} 
+             />
           )}
         </div>
       ))}
