@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home } from "lucide-react";
+import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home, Printer } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -140,6 +140,12 @@ export default function CustomerDashboard() {
                         {order.courier.name} ({order.courier.courierProfile?.vehicleBrand} - {order.courier.courierProfile?.vehiclePlate})
                       </div>
                     )}
+                  </div>
+                  
+                  <div className="mt-4 pt-4 border-t border-border1">
+                    <Link href={`/print/label/${order.id}`} target="_blank" className="btn bg-surface2 text-text2 hover:text-text1 hover:bg-surface3 border border-border2 w-full justify-center">
+                      <Printer className="w-4 h-4 mr-2" /> Print QR Label
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -166,11 +166,12 @@ export default function CourierDashboard() {
                      headers: { "Content-Type": "application/json" },
                      body: JSON.stringify({ orderId: data.activeOrder.id })
                    });
+                   window.open(`/print/receipt/${data.activeOrder.id}`, "_blank");
                    fetchData();
                  }}
                  className="btn w-full justify-center mt-6 py-4 bg-accentWarm text-bg hover:bg-[#d49938] border-none text-base font-semibold"
                >
-                 Complete Delivery
+                 Complete Delivery & Print Receipt
                </button>
             </div>
             
