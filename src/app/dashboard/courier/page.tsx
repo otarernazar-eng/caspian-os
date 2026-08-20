@@ -30,9 +30,9 @@ export default function CourierDashboard() {
     const interval = setInterval(fetchData, 5000); // Polling for new orders
 
     const useMockLocation = () => {
-      // Fallback to Aktau center for demo if GPS is denied/unavailable
-      const lat = 43.6481;
-      const lng = 51.1983;
+      // Fallback to 6-й микрорайон, 50, Aktau for demo
+      const lat = 43.6394;
+      const lng = 51.1557;
       setCurrentLocation({ lat, lng });
       fetch("/api/dashboard/courier/location", {
         method: "POST",
@@ -161,6 +161,29 @@ export default function CourierDashboard() {
                    </div>
                  </div>
                </div>
+
+               {/* AI Fuel & Profit Analysis */}
+               {data.activeOrder.distance && (
+                 <div className="mt-4 bg-surface2 rounded-xl p-4 border border-border1 text-sm space-y-3">
+                   <div className="flex justify-between items-center text-text4 text-xs font-mono mb-2">
+                     <span>AI Fleet Analytics</span>
+                     <span className="bg-green-500/20 text-green-400 px-2 py-0.5 rounded">OPTIMIZED</span>
+                   </div>
+                   <div className="flex justify-between items-center">
+                     <span className="text-text3">Estimated Fuel needed:</span>
+                     <span className="font-bold text-text1">{((data.activeOrder.distance / 1000) * 0.12).toFixed(1)} Liters</span>
+                   </div>
+                   <div className="flex justify-between items-center">
+                     <span className="text-text3">Fuel Cost (approx 295₸/L):</span>
+                     <span className="font-bold text-red-400">- ₸ {Math.round((data.activeOrder.distance / 1000) * 0.12 * 295)}</span>
+                   </div>
+                   <div className="w-full h-px bg-border1 my-1"></div>
+                   <div className="flex justify-between items-center">
+                     <span className="font-bold text-text1">Estimated Net Profit:</span>
+                     <span className="font-bold text-green-400 text-lg">₸ {data.activeOrder.price - Math.round((data.activeOrder.distance / 1000) * 0.12 * 295)}</span>
+                   </div>
+                 </div>
+               )}
 
                 {/* IoT Refrigeration Sensor */}
                 {data.activeOrder.requiresRefrigeration && (

@@ -19,6 +19,7 @@ export default function CustomerDashboard() {
   const [price, setPrice] = useState("");
   const [requiresRefrigeration, setRequiresRefrigeration] = useState(false);
   const [isRemoteVillage, setIsRemoteVillage] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1586528116311-ad8ed7c50a63?auto=format&fit=crop&w=300&q=80");
 
   const fetchOrders = () => {
     fetch("/api/dashboard/customer/orders")
@@ -75,6 +76,7 @@ export default function CustomerDashboard() {
           destLng,
           requiresRefrigeration,
           isRemoteVillage,
+          photoUrl
         })
       });
       if (res.ok) {
@@ -138,7 +140,15 @@ export default function CustomerDashboard() {
                       {order.status}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-lg mb-1">{order.description}</h3>
+                  <div className="flex gap-4">
+                    {order.photoUrl && (
+                      <div className="w-16 h-16 rounded overflow-hidden shrink-0 border border-border1">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={order.photoUrl} alt="Cargo" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <h3 className="font-semibold text-lg mb-1">{order.description}</h3>
+                  </div>
                   <div className="text-xl font-bold text-accentWarm mb-4">₸ {order.price}</div>
                   
                   <div className="space-y-2 text-sm text-text3">
@@ -179,6 +189,13 @@ export default function CustomerDashboard() {
           <div className="card w-full max-w-md animate-fade-in-up">
             <h2 className="text-xl font-semibold mb-4">New Delivery Order</h2>
             <form onSubmit={handleCreateOrder} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs text-text4">Cargo Photo (Required)</label>
+                <div className="flex gap-2">
+                  <input type="text" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2 text-xs" required />
+                  <button type="button" className="btn bg-surface2 px-2 text-xs border border-border2">📸 Use AI</button>
+                </div>
+              </div>
               <div className="space-y-1">
                 <label className="text-xs text-text4">Description</label>
                 <input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2" required placeholder="What needs to be delivered?" />

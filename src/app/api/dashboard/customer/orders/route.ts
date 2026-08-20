@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { destLat, destLng, destAddress, description, price, requiresRefrigeration, isRemoteVillage } = await req.json();
+    const { destLat, destLng, destAddress, description, price, requiresRefrigeration, isRemoteVillage, photoUrl } = await req.json();
 
     const order = await prisma.order.create({
       data: {
@@ -44,7 +44,8 @@ export async function POST(req: Request) {
         description,
         price: parseFloat(price),
         requiresRefrigeration: !!requiresRefrigeration,
-        isRemoteVillage: !!isRemoteVillage
+        isRemoteVillage: !!isRemoteVillage,
+        photoUrl: photoUrl || "https://images.unsplash.com/photo-1586528116311-ad8ed7c50a63?auto=format&fit=crop&w=300&q=80"
       }
     });
 

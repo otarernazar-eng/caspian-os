@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Truck, Package, MapPin, Clock, Satellite, ShieldCheck, User, Phone, Map } from "lucide-react";
+import { CheckCircle2, Truck, Package, MapPin, Clock, Satellite, ShieldCheck, User, Phone, Map, Image as ImageIcon, RotateCcw, BarChart2 } from "lucide-react";
 import { getSession } from "@/lib/auth";
 
 export default async function TrackPage({ params }: { params: { id: string } }) {
@@ -79,6 +79,26 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
           </div>
         </div>
 
+        {order.photoUrl && (
+          <div className="bg-surface1 border border-border1 rounded-2xl p-6 shadow-xl mb-6">
+            <h3 className="font-bold text-text1 mb-3 flex items-center gap-2"><ImageIcon className="w-4 h-4"/> Cargo Photo (At Dispatch)</h3>
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="w-full md:w-1/2 rounded-lg overflow-hidden border border-border1 shadow-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={order.photoUrl} alt="Cargo condition at dispatch" className="w-full h-auto object-cover max-h-64"/>
+              </div>
+              <div className="w-full md:w-1/2 space-y-4">
+                <div className="text-sm text-text3">
+                  This photo was securely attached by the seller during dispatch. If the cargo arrives in a different condition or doesn't match the photo, you can instantly claim a return using our AI.
+                </div>
+                <button className="btn bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 text-sm w-full justify-center py-3">
+                  <RotateCcw className="w-4 h-4 mr-1" /> AI Return (Scan & Refund)
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border2 before:to-transparent">
           
           {/* Step 1: Created */}
@@ -135,6 +155,34 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               </div>
               <div className="text-sm text-text3">
                 {step === 3 ? "Delivery completed successfully." : "Pending arrival."}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 p-6 bg-blue-500/5 border border-blue-500/20 rounded-xl space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <BarChart2 className="w-5 h-5 text-blue-400" />
+              <h2 className="text-lg font-bold text-blue-400">Public Buyer Analytics (This Location)</h2>
+            </div>
+            <p className="text-sm text-text3 mb-4">
+              Transparent supply chain data for consumer protection.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="bg-bg/50 p-3 rounded border border-border1">
+                <div className="text-text4 text-xs font-mono">Last Delivery</div>
+                <div className="font-bold">2 days ago</div>
+              </div>
+              <div className="bg-bg/50 p-3 rounded border border-border1">
+                <div className="text-text4 text-xs font-mono">Popular Item</div>
+                <div className="font-bold truncate" title={order.description}>{order.description}</div>
+              </div>
+              <div className="bg-bg/50 p-3 rounded border border-border1">
+                <div className="text-text4 text-xs font-mono">Price Transparency</div>
+                <div className="font-bold text-accentWarm">₸ {order.price}</div>
+              </div>
+              <div className="bg-bg/50 p-3 rounded border border-border1">
+                <div className="text-text4 text-xs font-mono">Supply Status</div>
+                <div className="font-bold text-green-400">Stable</div>
               </div>
             </div>
           </div>

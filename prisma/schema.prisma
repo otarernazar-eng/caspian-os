@@ -49,6 +49,7 @@ model Order {
   // Item
   description   String
   price         Float
+  photoUrl      String?
   
   // Hackathon features
   requiresRefrigeration Boolean @default(false)
