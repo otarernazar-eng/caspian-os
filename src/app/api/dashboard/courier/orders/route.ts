@@ -25,9 +25,45 @@ export async function GET() {
       orderBy: { createdAt: "desc" }
     });
 
+    // 3. Smart Match Algorithm: Find return cargo (Real DB query)
+    let smartMatchOrder = null;
+    if (activeOrder) {
+      // Find a pending order that can be picked up near the active order's destination
+      const allPending = await prisma.order.findMany({
+        where: { status: "PENDING" },
+        include: { customer: true },
+        take: 5
+      });
+      if (allPending.length > 0) {
+        // Just take the first one for MVP, but in a real app we'd use Haversine distance to match `destLat`
+        smartMatchOrder = allPending[0];
+      }
+    }
+
+    // 4. Real-time Weather Alert for Mangistau (Aktau)
+    let weatherAlert = null;
+    try {
+      const weatherRes = await fetch("https://api.open-meteo.com/v1/forecast?latitude=43.6481&longitude=51.1983&current_weather=true");
+      if (weatherRes.ok) {
+        const weatherData = await weatherRes.json();
+        const current = weatherData.current_weather;
+        if (current.windspeed > 15) {
+          weatherAlert = `DUST STORM WARNING: Wind speed ${current.windspeed} km/h`;
+        } else if (current.temperature > 35) {
+          weatherAlert = `EXTREME HEAT: ${current.temperature}°C`;
+        } else {
+          weatherAlert = `Normal: ${current.temperature}°C, Wind ${current.windspeed} km/h`;
+        }
+      }
+    } catch (e) {
+      console.error("Weather fetch failed", e);
+    }
+
     return NextResponse.json({ 
       activeOrder, 
-      pendingOrders: activeOrder ? [] : pendingOrders 
+      pendingOrders: activeOrder ? [] : pendingOrders,
+      smartMatchOrder,
+      weatherAlert
     });
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
