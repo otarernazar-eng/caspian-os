@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Activity, Users, Truck, Route, DollarSign } from "lucide-react";
 import { useRouter } from "next/navigation";
+import LogisticsMap from "@/components/LogisticsMap";
 
 export default function GovernmentDashboard() {
   const [data, setData] = useState<any>(null);
@@ -133,6 +134,10 @@ export default function GovernmentDashboard() {
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div className="card p-0 overflow-hidden h-[500px]">
+           <LogisticsMap orders={data.orders} />
         </div>
 
       </main>
