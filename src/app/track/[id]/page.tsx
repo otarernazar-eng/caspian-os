@@ -1,13 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Truck, Package, MapPin, Clock } from "lucide-react";
+import { CheckCircle2, Truck, Package, MapPin, Clock, Satellite, ShieldCheck, User, Phone, Map } from "lucide-react";
+import { getSession } from "@/lib/auth";
 
 export default async function TrackPage({ params }: { params: { id: string } }) {
+  const session = await getSession();
+  const isGov = session?.role === "GOVERNMENT" || session?.role === "ADMIN";
+
   const order = await prisma.order.findUnique({
     where: { id: params.id },
     include: {
       customer: true,
-      courier: true,
+      courier: { include: { courierProfile: true } },
     }
   });
 
@@ -20,10 +24,50 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
 
   return (
     <div className="min-h-screen bg-bg text-text1 p-4 md:p-8 font-sans">
-      <div className="max-w-2xl mx-auto bg-surface1 border border-border1 rounded-2xl p-6 shadow-xl">
+      <div className="max-w-2xl mx-auto space-y-6">
         
-        <div className="text-center mb-8 pb-8 border-b border-border1">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">CASPIAN OS</h1>
+        {isGov && (
+          <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl flex items-start gap-3">
+            <ShieldCheck className="w-6 h-6 text-red-500 shrink-0 mt-1" />
+            <div>
+              <h2 className="text-red-500 font-bold">GOVERNMENT ACCESS: CONFIDENTIAL DATA</h2>
+              <p className="text-xs text-text3 mb-3">You are viewing this public tracking page with elevated Akimat privileges. All hidden logistics data is unmasked.</p>
+              
+              <div className="grid grid-cols-2 gap-4 text-sm bg-bg/50 p-3 rounded border border-border1">
+                <div>
+                  <div className="text-text4 text-xs font-mono">Carrier IIN</div>
+                  <div>{order.courier?.iin || "Not provided"}</div>
+                </div>
+                <div>
+                  <div className="text-text4 text-xs font-mono">Carrier Phone</div>
+                  <div>{order.courier?.phone || "Not provided"}</div>
+                </div>
+                <div>
+                  <div className="text-text4 text-xs font-mono">Vehicle Plate</div>
+                  <div>{order.courier?.courierProfile?.vehiclePlate || "N/A"}</div>
+                </div>
+                <div>
+                  <div className="text-text4 text-xs font-mono">Transaction Value</div>
+                  <div className="text-accentWarm font-bold">₸ {order.price}</div>
+                </div>
+                {order.courier?.courierProfile?.lastLat && (
+                  <div className="col-span-2">
+                    <div className="text-text4 text-xs font-mono">Raw GPS Coordinates</div>
+                    <div className="font-mono text-[10px]">{order.courier.courierProfile.lastLat}, {order.courier.courierProfile.lastLng}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="bg-surface1 border border-border1 rounded-2xl p-6 shadow-xl">
+          <div className="text-center mb-6 pb-6 border-b border-border1 relative">
+            <div className="absolute top-0 right-0 flex items-center gap-1 text-[10px] text-green-400 bg-green-500/10 px-2 py-1 rounded-full border border-green-500/30 animate-pulse">
+              <Satellite className="w-3 h-3" />
+              LIVE SATELLITE SYNC
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight mb-2">CASPIAN OS</h1>
           <div className="text-text4 font-mono text-sm uppercase">Tracking Code: {order.id.slice(0, 8)}</div>
           
           <div className="mt-6 flex flex-col items-center gap-2">
@@ -59,11 +103,24 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               <div className="flex items-center justify-between mb-1">
                 <h3 className="font-bold text-text1">In Transit</h3>
               </div>
-              <div className="text-sm text-text3">
+              <div className="text-sm text-text3 mb-2">
                 {step >= 2 
                   ? `Carrier assigned: ${order.courier?.name || 'Driver'}. On the way.` 
                   : "Waiting for carrier assignment..."}
               </div>
+              
+              {step >= 2 && order.estimatedTime && (
+                <div className="bg-bg p-2 rounded border border-border1 text-xs">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-text4">Estimated Time:</span>
+                    <span className="font-bold text-text1">{Math.round(order.estimatedTime / 60)} min</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-text4">Route Distance:</span>
+                    <span className="font-bold text-text1">{Math.round((order.distance || 0) / 1000)} km</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -83,7 +140,6 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
           </div>
 
         </div>
-
       </div>
     </div>
   );

@@ -203,12 +203,35 @@ export default function CourierDashboard() {
                <LogisticsMap orders={[data.activeOrder]} />
             </div>
 
-            {/* AI Smart Match (Hackathon Feature) */}
+            {/* AI Smart Match (Combine Cargo) */}
+            {data.smartMatchCombineOrder && (
+              <div className="card border-[#7CF8E5]/50 bg-[#7CF8E5]/5 animate-fade-in mt-4">
+                 <div className="flex items-center gap-2 mb-2">
+                   <Package className="w-5 h-5 text-[#7CF8E5]" />
+                   <h2 className="text-lg font-bold text-[#7CF8E5]">AI Match: Combine Cargo</h2>
+                 </div>
+                 <p className="text-sm text-text3 mb-4">
+                   This order goes to exactly the same destination ({data.smartMatchCombineOrder.destAddress.split(',')[0]}). Take it to double your earnings on the same route!
+                 </p>
+                 <div className="flex justify-between items-center bg-bg/50 p-3 rounded-lg border border-border1">
+                   <div>
+                     <div className="text-sm font-semibold">{data.smartMatchCombineOrder.customer?.name} &rarr; {data.smartMatchCombineOrder.destAddress}</div>
+                     <div className="text-xs text-text4 mt-1">{data.smartMatchCombineOrder.description}</div>
+                   </div>
+                   <div className="text-right flex flex-col items-end">
+                     <div className="text-lg font-bold text-text1">+ ₸ {data.smartMatchCombineOrder.price}</div>
+                     <button onClick={() => handleAcceptOrder(data.smartMatchCombineOrder.id)} className="text-xs bg-[#7CF8E5] text-bg px-3 py-1 rounded mt-1 font-bold hover:bg-[#5ae6d1]">Combine Route</button>
+                   </div>
+                 </div>
+              </div>
+            )}
+
+            {/* AI Smart Match (Return Cargo) */}
             {data.smartMatchOrder && (
               <div className="card border-accentWarm/50 bg-accentWarm/5 animate-fade-in mt-4">
                  <div className="flex items-center gap-2 mb-2">
                    <Sparkles className="w-5 h-5 text-accentWarm" />
-                   <h2 className="text-lg font-bold text-accentWarm">AI Smart Match: Return Cargo</h2>
+                   <h2 className="text-lg font-bold text-accentWarm">AI Match: Return Cargo</h2>
                  </div>
                  <p className="text-sm text-text3 mb-4">
                    Based on your current destination, we found a real pending order nearby. Accept it now to minimize empty run.

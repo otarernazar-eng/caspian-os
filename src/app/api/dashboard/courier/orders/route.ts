@@ -25,18 +25,23 @@ export async function GET() {
       orderBy: { createdAt: "desc" }
     });
 
-    // 3. Smart Match Algorithm: Find return cargo (Real DB query)
-    let smartMatchOrder = null;
+    // 3. Smart Match Algorithm: Find return cargo and combined cargo (Real DB query)
+    let smartMatchReturnOrder = null;
+    let smartMatchCombineOrder = null;
+
     if (activeOrder) {
-      // Find a pending order that can be picked up near the active order's destination
       const allPending = await prisma.order.findMany({
         where: { status: "PENDING" },
         include: { customer: true },
-        take: 5
+        take: 10
       });
+      
       if (allPending.length > 0) {
-        // Just take the first one for MVP, but in a real app we'd use Haversine distance to match `destLat`
-        smartMatchOrder = allPending[0];
+        // Find order to the same destination (Combine Cargo)
+        smartMatchCombineOrder = allPending.find(o => o.destAddress.toLowerCase().includes(activeOrder.destAddress.toLowerCase().split(',')[0]));
+        
+        // Find return cargo (Any other order)
+        smartMatchReturnOrder = allPending.find(o => o.id !== smartMatchCombineOrder?.id);
       }
     }
 
@@ -62,7 +67,8 @@ export async function GET() {
     return NextResponse.json({ 
       activeOrder, 
       pendingOrders: activeOrder ? [] : pendingOrders,
-      smartMatchOrder,
+      smartMatchOrder: smartMatchReturnOrder,
+      smartMatchCombineOrder,
       weatherAlert
     });
   } catch (error) {

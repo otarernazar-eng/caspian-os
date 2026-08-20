@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home, Printer } from "lucide-react";
+import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home, Printer, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -144,16 +144,26 @@ export default function CustomerDashboard() {
                   <div className="space-y-2 text-sm text-text3">
                     <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {order.destAddress}</div>
                     {order.courier && (
-                      <div className="flex items-center gap-2 text-text1">
-                        <Truck className="w-4 h-4 text-accentWarm" /> 
-                        {order.courier.name} ({order.courier.courierProfile?.vehicleBrand} - {order.courier.courierProfile?.vehiclePlate})
+                      <div className="flex flex-col gap-1 text-text1 bg-surface2 p-3 rounded-lg border border-border2">
+                        <div className="flex items-center gap-2">
+                          <Truck className="w-4 h-4 text-accentWarm" /> 
+                          <span className="font-semibold">{order.courier.name}</span> ({order.courier.courierProfile?.vehicleBrand} - {order.courier.courierProfile?.vehiclePlate})
+                        </div>
+                        {order.estimatedTime && (
+                          <div className="text-xs text-text4 flex items-center gap-2 mt-1">
+                            <Clock className="w-3 h-3"/> ETA: {Math.round(order.estimatedTime / 60)} min
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
                   
-                  <div className="mt-4 pt-4 border-t border-border1">
-                    <Link href={`/print/label/${order.id}?origin=${encodeURIComponent(appOrigin)}`} target="_blank" className="btn bg-surface2 text-text2 hover:text-text1 hover:bg-surface3 border border-border2 w-full justify-center">
-                      <Printer className="w-4 h-4 mr-2" /> Print QR Label
+                  <div className="mt-4 pt-4 border-t border-border1 flex flex-col sm:flex-row gap-2">
+                    <Link href={`/track/${order.id}`} target="_blank" className="btn flex-1 bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/30 justify-center text-xs">
+                      <Activity className="w-4 h-4 mr-1" /> Live Track
+                    </Link>
+                    <Link href={`/print/label/${order.id}?origin=${encodeURIComponent(appOrigin)}`} target="_blank" className="btn flex-1 bg-surface2 text-text2 hover:text-text1 hover:bg-surface3 border border-border2 justify-center text-xs">
+                      <Printer className="w-4 h-4 mr-1" /> Print QR
                     </Link>
                   </div>
                 </div>
