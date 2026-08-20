@@ -19,12 +19,12 @@ export async function POST(req: Request) {
     // Call 2GIS Routing API
     // 2GIS API typically requires start (courierLat, courierLng) and end (destLat, destLng)
     // We will use standard 2GIS directions API
-    const apiKey = process.env.TWOGIS_API_KEY || "demo_key"; 
+    const apiKey = process.env.TWOGIS_API_KEY || "09ce5faf-9ec3-47c1-8329-9560c544c79f"; 
     let routeGeometry = null;
     let distance = null;
     let estimatedTime = null;
 
-    if (courierLat && courierLng && order.destLat && order.destLng && apiKey !== "demo_key") {
+    if (courierLat && courierLng && order.destLat && order.destLng) {
       try {
         const response = await fetch(`https://routing.api.2gis.com/car/routing/2.0.0/global?key=${apiKey}`, {
           method: "POST",
