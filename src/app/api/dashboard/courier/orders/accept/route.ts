@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     // Call 2GIS Routing API
     // 2GIS API typically requires start (courierLat, courierLng) and end (destLat, destLng)
     // We will use standard 2GIS directions API
-    const apiKey = process.env.TWOGIS_API_KEY;
+    const apiKey = process.env.TWOGIS_API_KEY || "09ce5faf-9ec3-47c1-8329-9560c544c79f";
     if (!apiKey) {
       console.error("Missing TWOGIS_API_KEY in environment variables");
       return NextResponse.json({ error: "Routing service configuration error" }, { status: 500 });
