@@ -39,6 +39,24 @@ export default function CustomerDashboard() {
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // 1. Geocode the address using free Nominatim API to ensure REAL coordinates on land (not in the Caspian Sea)
+      let destLat = 43.6481;
+      let destLng = 51.1983;
+
+      try {
+        // Append Mangistau region to improve geocoding accuracy
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destAddress + ", Mangistau, Kazakhstan")}`);
+        if (geoRes.ok) {
+          const geoData = await geoRes.json();
+          if (geoData && geoData.length > 0) {
+            destLat = parseFloat(geoData[0].lat);
+            destLng = parseFloat(geoData[0].lon);
+          }
+        }
+      } catch (err) {
+        console.error("Geocoding failed", err);
+      }
+
       const res = await fetch("/api/dashboard/customer/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,8 +64,8 @@ export default function CustomerDashboard() {
           destAddress,
           description,
           price,
-          destLat: 43.6481 + (Math.random() - 0.5) * 0.1, // Simulated mock coordinates for MVP
-          destLng: 51.1983 + (Math.random() - 0.5) * 0.1,
+          destLat,
+          destLng,
         })
       });
       if (res.ok) {
