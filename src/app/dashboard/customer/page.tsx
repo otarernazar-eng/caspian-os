@@ -9,6 +9,7 @@ export default function CustomerDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [newlyCreatedOrderId, setNewlyCreatedOrderId] = useState<string | null>(null);
   const router = useRouter();
 
   // Form State
@@ -73,6 +74,10 @@ export default function CustomerDashboard() {
         })
       });
       if (res.ok) {
+        const data = await res.json();
+        if (data.order && data.order.id) {
+           setNewlyCreatedOrderId(data.order.id);
+        }
         setShowModal(false);
         setDestAddress("");
         setDescription("");
@@ -194,6 +199,51 @@ export default function CustomerDashboard() {
           </div>
         </div>
       )}
+
+      {/* Post-Creation Success Modal with QR */}
+      {newlyCreatedOrderId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+          <div className="card w-full max-w-sm animate-fade-in-up flex flex-col items-center text-center">
+            <Check className="w-12 h-12 text-[#7CF8E5] mb-4 bg-[#7CF8E5]/10 p-2 rounded-full" />
+            <h2 className="text-xl font-bold mb-2">Shipment Created!</h2>
+            <p className="text-sm text-text3 mb-6">Scan the QR code below to track your cargo publicly without an account.</p>
+            
+            <div className="bg-white p-4 rounded-xl mb-6 shadow-[0_0_20px_rgba(124,248,229,0.3)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`https://caspian-os.vercel.app/track/${newlyCreatedOrderId}`)}`} 
+                alt="Tracking QR Code" 
+                width={200} 
+                height={200} 
+              />
+            </div>
+
+            <div className="flex flex-col w-full gap-3">
+              <a 
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(`https://caspian-os.vercel.app/track/${newlyCreatedOrderId}`)}`} 
+                download={`RayCast_QR_${newlyCreatedOrderId.slice(0,8)}.png`} 
+                target="_blank" 
+                className="btn bg-accentWarm text-bg hover:bg-[#d49938] border-none flex-1 w-full justify-center font-bold"
+              >
+                Download QR Image
+              </a>
+              <button 
+                onClick={() => window.open(`/print/label/${newlyCreatedOrderId}`, '_blank')} 
+                className="btn bg-surface2 text-text1 hover:bg-surface3 border border-border2 flex-1 w-full justify-center"
+              >
+                <Printer className="w-4 h-4 mr-2" /> Print Thermal Label
+              </button>
+              <button 
+                onClick={() => setNewlyCreatedOrderId(null)} 
+                className="btn bg-transparent flex-1 w-full justify-center mt-2 text-text4 hover:text-text1"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
