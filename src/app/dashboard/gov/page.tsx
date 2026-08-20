@@ -95,7 +95,7 @@ export default function GovernmentDashboard() {
               {data.couriers.map((c: any) => (
                 <div key={c.id} className="card py-3 px-4 flex justify-between items-center border-l-2 border-l-green-500">
                   <div>
-                    <div className="font-semibold flex items-center gap-1">{c.name} <ShieldCheck className="w-3 h-3 text-green-500" title="eGov Verified" /></div>
+                    <div className="font-semibold flex items-center gap-1">{c.name} <ShieldCheck className="w-3 h-3 text-green-500" /></div>
                     <div className="text-xs font-mono text-text4">{c.phone} | IIN: {c.iin || "N/A"}</div>
                   </div>
                   <div className="text-right">
@@ -116,7 +116,7 @@ export default function GovernmentDashboard() {
               {data.customers.length === 0 && <div className="text-sm text-text4">No customers registered.</div>}
               {data.customers.map((c: any) => (
                 <div key={c.id} className="card py-3 px-4 border-l-2 border-l-green-500">
-                  <div className="font-semibold flex items-center gap-1">{c.name} <ShieldCheck className="w-3 h-3 text-green-500" title="eGov Verified" /></div>
+                  <div className="font-semibold flex items-center gap-1">{c.name} <ShieldCheck className="w-3 h-3 text-green-500" /></div>
                   <div className="text-xs font-mono text-text4">{c.phone} | IIN: {c.iin || "N/A"}</div>
                 </div>
               ))}

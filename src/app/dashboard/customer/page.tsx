@@ -99,7 +99,7 @@ export default function CustomerDashboard() {
       <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur border-b border-border1 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Activity className="w-5 h-5 text-accentWarm" />
-          <span className="font-semibold text-lg flex items-center gap-2">Customer Portal <ShieldCheck className="w-4 h-4 text-green-500" title="eGov Verified" /></span>
+          <span className="font-semibold text-lg flex items-center gap-2">Customer Portal <ShieldCheck className="w-4 h-4 text-green-500" /></span>
         </div>
         <button onClick={() => fetch("/api/auth/logout", { method: "POST" }).then(() => router.push("/"))} className="text-xs text-text4 hover:text-text1">
           LOGOUT

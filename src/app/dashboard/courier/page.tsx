@@ -83,7 +83,7 @@ export default function CourierDashboard() {
       <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur border-b border-border1 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Activity className="w-5 h-5 text-accentWarm" />
-          <span className="font-semibold text-lg flex items-center gap-2">Courier Portal <ShieldCheck className="w-4 h-4 text-green-500" title="eGov Verified Driver" /></span>
+          <span className="font-semibold text-lg flex items-center gap-2">Courier Portal <ShieldCheck className="w-4 h-4 text-green-500" /></span>
         </div>
         <button onClick={() => fetch("/api/auth/logout", { method: "POST" }).then(() => router.push("/"))} className="text-xs text-text4 hover:text-text1">
           LOGOUT
@@ -237,8 +237,8 @@ export default function CourierDashboard() {
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="font-semibold text-lg flex items-center gap-2 flex-wrap">
                       {order.description} 
-                      {order.requiresRefrigeration && <ThermometerSnowflake className="w-4 h-4 text-blue-400" title="IoT Refrigeration Required" />}
-                      {order.isRemoteVillage && <Home className="w-4 h-4 text-green-400" title="Remote Village Subsidized" />}
+                      {order.requiresRefrigeration && <ThermometerSnowflake className="w-4 h-4 text-blue-400" />}
+                      {order.isRemoteVillage && <Home className="w-4 h-4 text-green-400" />}
                     </h3>
                     <div className="text-right">
                       <div className="text-xl font-bold text-accentWarm">₸ {order.price}</div>
