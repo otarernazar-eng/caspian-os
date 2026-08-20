@@ -29,7 +29,26 @@ export async function GET() {
       orderBy: { createdAt: "desc" }
     });
 
-    return NextResponse.json({ couriers, customers, orders });
+    // Calculate AI Economic metrics
+    // Assume 40% reduction in empty mileage (from the hackathon case context)
+    const totalDistanceMeters = orders.reduce((sum, o) => sum + (o.distance || 0), 0);
+    const totalDistanceKm = totalDistanceMeters / 1000;
+    
+    // The platform reduces empty runs by finding return cargo. 
+    // Say without platform, empty run is 100% of distance. With platform, we save 40% of that.
+    const savedEmptyRunKm = totalDistanceKm * 0.4;
+    const fuelSavedLiters = savedEmptyRunKm * 0.15; // 15 liters per 100km (trucks/vans)
+    const co2SavedKg = fuelSavedLiters * 2.68; // 2.68 kg CO2 per liter of diesel
+
+    const ecoMetrics = {
+      totalDistanceKm: totalDistanceKm.toFixed(1),
+      savedEmptyRunKm: savedEmptyRunKm.toFixed(1),
+      fuelSavedLiters: fuelSavedLiters.toFixed(1),
+      co2SavedKg: co2SavedKg.toFixed(1),
+      totalEconomicImpactKzt: (fuelSavedLiters * 295).toFixed(0) // 295 KZT per liter of diesel
+    };
+
+    return NextResponse.json({ couriers, customers, orders, ecoMetrics });
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

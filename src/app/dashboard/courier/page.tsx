@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, MapPin, Navigation, DollarSign, Check } from "lucide-react";
+import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -147,6 +147,28 @@ export default function CourierDashboard() {
             <div className="card p-0 overflow-hidden h-[400px]">
                <LogisticsMap orders={[data.activeOrder]} />
             </div>
+
+            {/* AI Smart Match (Hackathon Feature) */}
+            <div className="card border-accentWarm/50 bg-accentWarm/5 animate-fade-in mt-4">
+               <div className="flex items-center gap-2 mb-2">
+                 <Sparkles className="w-5 h-5 text-accentWarm" />
+                 <h2 className="text-lg font-bold text-accentWarm">AI Smart Match: Return Cargo</h2>
+               </div>
+               <p className="text-sm text-text3 mb-4">
+                 Based on your current destination, we found a return cargo to minimize empty runs (снижение порожнего пробега).
+               </p>
+               <div className="flex justify-between items-center bg-bg/50 p-3 rounded-lg border border-border1">
+                 <div>
+                   <div className="text-sm font-semibold">Store supply &rarr; Aktau City Center</div>
+                   <div className="text-xs text-green-500 font-mono mt-1">Saves ~45km of empty run</div>
+                 </div>
+                 <div className="text-right">
+                   <div className="text-lg font-bold text-text1">+ ₸ 15,000</div>
+                   <button className="text-xs bg-accentWarm text-bg px-3 py-1 rounded mt-1 font-bold">Queue Order</button>
+                 </div>
+               </div>
+            </div>
+
           </div>
         ) : (
           <div className="space-y-4">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Users, Truck, Route, DollarSign } from "lucide-react";
+import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -52,6 +52,37 @@ export default function GovernmentDashboard() {
 
       <main className="p-6 max-w-7xl mx-auto space-y-8">
         
+        {/* Economic Impact Dashboard */}
+        {data.ecoMetrics && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <BarChart className="w-5 h-5 text-text3" /> Platform Economic Impact
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="card bg-surface2/50">
+                <div className="text-xs text-text4 font-mono mb-1 flex items-center gap-2"><Route className="w-3 h-3"/> Empty Run Saved</div>
+                <div className="text-2xl font-bold text-text1">{data.ecoMetrics.savedEmptyRunKm} km</div>
+                <div className="text-xs text-text4 mt-2">Prevented empty returns</div>
+              </div>
+              <div className="card bg-surface2/50">
+                <div className="text-xs text-text4 font-mono mb-1 flex items-center gap-2"><Zap className="w-3 h-3 text-yellow-500"/> Fuel Saved</div>
+                <div className="text-2xl font-bold text-text1">{data.ecoMetrics.fuelSavedLiters} L</div>
+                <div className="text-xs text-text4 mt-2">Diesel / Petrol equivalent</div>
+              </div>
+              <div className="card bg-surface2/50">
+                <div className="text-xs text-text4 font-mono mb-1 flex items-center gap-2"><Leaf className="w-3 h-3 text-green-500"/> CO2 Reduction</div>
+                <div className="text-2xl font-bold text-text1">{data.ecoMetrics.co2SavedKg} kg</div>
+                <div className="text-xs text-text4 mt-2">Emissions prevented</div>
+              </div>
+              <div className="card bg-surface2/50 border-accentWarm/30">
+                <div className="text-xs text-text4 font-mono mb-1 flex items-center gap-2"><DollarSign className="w-3 h-3 text-accentWarm"/> Total Savings</div>
+                <div className="text-2xl font-bold text-accentWarm">₸ {data.ecoMetrics.totalEconomicImpactKzt}</div>
+                <div className="text-xs text-text4 mt-2">Direct economic benefit</div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Couriers Column */}
