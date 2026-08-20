@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Activity, MapPin, Navigation, DollarSign, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import LogisticsMap from "@/components/LogisticsMap";
 
 export default function CourierDashboard() {
   const [data, setData] = useState<any>(null);
@@ -141,6 +142,10 @@ export default function CourierDashboard() {
                <button className="btn w-full justify-center mt-6 py-4 bg-accentWarm text-bg hover:bg-[#d49938] border-none text-base font-semibold">
                  Complete Delivery
                </button>
+            </div>
+            
+            <div className="card p-0 overflow-hidden h-[400px]">
+               <LogisticsMap orders={[data.activeOrder]} />
             </div>
           </div>
         ) : (
