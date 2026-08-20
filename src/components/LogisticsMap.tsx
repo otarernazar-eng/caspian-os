@@ -11,12 +11,12 @@ const Marker = dynamic(() => import("react-leaflet").then(m => m.Marker), { ssr:
 const Popup = dynamic(() => import("react-leaflet").then(m => m.Popup), { ssr: false });
 const Polyline = dynamic(() => import("react-leaflet").then(m => m.Polyline), { ssr: false });
 
-const parseWKT = (wkt: string) => {
+const parseWKT = (wkt: string): [number, number][] => {
   if (!wkt || !wkt.startsWith("LINESTRING")) return [];
   const coordsStr = wkt.replace("LINESTRING(", "").replace(")", "");
   return coordsStr.split(",").map(pair => {
     const [lng, lat] = pair.trim().split(" ");
-    return [parseFloat(lat), parseFloat(lng)];
+    return [parseFloat(lat), parseFloat(lng)] as [number, number];
   });
 };
 
