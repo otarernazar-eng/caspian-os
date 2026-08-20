@@ -29,9 +29,27 @@ export default function CourierDashboard() {
     fetchData();
     const interval = setInterval(fetchData, 5000); // Polling for new orders
 
+    const useMockLocation = () => {
+      // Fallback to Aktau center for demo if GPS is denied/unavailable
+      const lat = 43.6481;
+      const lng = 51.1983;
+      setCurrentLocation({ lat, lng });
+      fetch("/api/dashboard/courier/location", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lat, lng })
+      }).catch(console.error);
+    };
+
+    let mockTimeout: any;
+
     if ("geolocation" in navigator) {
+      // If GPS doesn't respond in 3 seconds, use mock to prevent demo blocking
+      mockTimeout = setTimeout(useMockLocation, 3000);
+
       navigator.geolocation.watchPosition(
         (pos) => {
+          clearTimeout(mockTimeout);
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
           setCurrentLocation({ lat, lng });
@@ -43,9 +61,15 @@ export default function CourierDashboard() {
             body: JSON.stringify({ lat, lng })
           }).catch(console.error);
         },
-        console.error,
-        { enableHighAccuracy: true }
+        (error) => {
+          console.error("GPS Error:", error);
+          clearTimeout(mockTimeout);
+          useMockLocation(); // Fallback on error (e.g. Permission Denied)
+        },
+        { enableHighAccuracy: true, timeout: 5000 }
       );
+    } else {
+      useMockLocation();
     }
 
     return () => clearInterval(interval);
