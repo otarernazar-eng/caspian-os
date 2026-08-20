@@ -50,6 +50,9 @@ model Order {
   description   String
   price         Float
   
+  // Hackathon features
+  requiresRefrigeration Boolean @default(false)
+
   // Route Data
   routeGeometry String?  // Stores 2GIS polyline
   distance      Float?

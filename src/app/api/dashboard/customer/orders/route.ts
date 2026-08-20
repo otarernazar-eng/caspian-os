@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { destLat, destLng, destAddress, description, price } = await req.json();
+    const { destLat, destLng, destAddress, description, price, requiresRefrigeration } = await req.json();
 
     const order = await prisma.order.create({
       data: {
@@ -42,7 +42,8 @@ export async function POST(req: Request) {
         destLng,
         destAddress,
         description,
-        price: parseFloat(price)
+        price: parseFloat(price),
+        requiresRefrigeration: !!requiresRefrigeration
       }
     });
 

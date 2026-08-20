@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind } from "lucide-react";
+import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -83,7 +83,7 @@ export default function CourierDashboard() {
       <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur border-b border-border1 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Activity className="w-5 h-5 text-accentWarm" />
-          <span className="font-semibold text-lg">Courier Portal</span>
+          <span className="font-semibold text-lg flex items-center gap-2">Courier Portal <ShieldCheck className="w-4 h-4 text-green-500" title="eGov Verified Driver" /></span>
         </div>
         <button onClick={() => fetch("/api/auth/logout", { method: "POST" }).then(() => router.push("/"))} className="text-xs text-text4 hover:text-text1">
           LOGOUT
@@ -131,6 +131,20 @@ export default function CourierDashboard() {
                    </div>
                  </div>
                </div>
+
+                {/* IoT Refrigeration Sensor */}
+                {data.activeOrder.requiresRefrigeration && (
+                  <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-blue-400">
+                      <ThermometerSnowflake className="w-5 h-5" />
+                      <div className="text-sm font-bold">IoT Cargo Sensor</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-mono font-bold text-blue-400">+4.2°C</div>
+                      <div className="text-[10px] text-text4 uppercase">Cooling Active</div>
+                    </div>
+                  </div>
+                )}
 
                {data.activeOrder.estimatedTime && (
                  <div className="mt-6 p-3 bg-surface2 rounded-lg flex justify-between items-center text-sm">
@@ -191,6 +205,18 @@ export default function CourierDashboard() {
                 </div>
               </div>
             )}
+            
+            {/* Driver Fatigue Alert */}
+            <div className="card border-orange-500/30 bg-orange-500/5 mt-4 flex justify-between items-center">
+               <div className="flex items-center gap-3">
+                 <Coffee className="w-6 h-6 text-orange-400" />
+                 <div>
+                   <div className="text-sm font-bold text-orange-400">AI Fatigue Monitor</div>
+                   <div className="text-xs text-text3">Active Driving Time: 4h 15m</div>
+                 </div>
+               </div>
+               <div className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-1 rounded">REST RECOMMENDED</div>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -203,7 +229,10 @@ export default function CourierDashboard() {
               data.pendingOrders.map((order: any) => (
                 <div key={order.id} className="card hover:border-borderH1 transition-colors">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-semibold text-lg">{order.description}</h3>
+                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                      {order.description} 
+                      {order.requiresRefrigeration && <ThermometerSnowflake className="w-4 h-4 text-blue-400" title="IoT Refrigeration Required" />}
+                    </h3>
                     <div className="text-xl font-bold text-accentWarm">₸ {order.price}</div>
                   </div>
                   

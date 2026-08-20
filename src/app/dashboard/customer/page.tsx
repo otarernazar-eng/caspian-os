@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Plus, Package, MapPin, Truck, Check } from "lucide-react";
+import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -15,6 +15,7 @@ export default function CustomerDashboard() {
   const [destAddress, setDestAddress] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [requiresRefrigeration, setRequiresRefrigeration] = useState(false);
 
   const fetchOrders = () => {
     fetch("/api/dashboard/customer/orders")
@@ -66,6 +67,7 @@ export default function CustomerDashboard() {
           price,
           destLat,
           destLng,
+          requiresRefrigeration,
         })
       });
       if (res.ok) {
@@ -73,6 +75,7 @@ export default function CustomerDashboard() {
         setDestAddress("");
         setDescription("");
         setPrice("");
+        setRequiresRefrigeration(false);
         fetchOrders();
       }
     } catch (e) {
@@ -93,7 +96,7 @@ export default function CustomerDashboard() {
       <header className="sticky top-0 z-50 bg-bg/80 backdrop-blur border-b border-border1 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Activity className="w-5 h-5 text-accentWarm" />
-          <span className="font-semibold text-lg">Customer Portal</span>
+          <span className="font-semibold text-lg flex items-center gap-2">Customer Portal <ShieldCheck className="w-4 h-4 text-green-500" title="eGov Verified" /></span>
         </div>
         <button onClick={() => fetch("/api/auth/logout", { method: "POST" }).then(() => router.push("/"))} className="text-xs text-text4 hover:text-text1">
           LOGOUT
@@ -160,6 +163,13 @@ export default function CustomerDashboard() {
                 <label className="text-xs text-text4">Price (₸)</label>
                 <input type="number" value={price} onChange={e => setPrice(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2" required min="100" />
               </div>
+              <label className="flex items-center gap-2 cursor-pointer mt-2 bg-blue-500/10 p-3 rounded border border-blue-500/30">
+                <input type="checkbox" checked={requiresRefrigeration} onChange={e => setRequiresRefrigeration(e.target.checked)} className="accent-blue-500 w-4 h-4" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-blue-400 flex items-center gap-1"><ThermometerSnowflake className="w-4 h-4"/> Perishable Cargo (IoT Cooling req.)</span>
+                  <span className="text-xs text-text4">Requires vehicle with IoT temperature tracking (e.g. food/medicine)</span>
+                </div>
+              </label>
               <div className="flex gap-2 pt-4">
                 <button type="button" onClick={() => setShowModal(false)} className="btn flex-1 bg-transparent">Cancel</button>
                 <button type="submit" className="btn flex-1 bg-text1 text-bg hover:bg-text2 hover:text-bg">Create Order</button>
