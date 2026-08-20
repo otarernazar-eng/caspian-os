@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake } from "lucide-react";
+import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -16,6 +16,7 @@ export default function CustomerDashboard() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [requiresRefrigeration, setRequiresRefrigeration] = useState(false);
+  const [isRemoteVillage, setIsRemoteVillage] = useState(false);
 
   const fetchOrders = () => {
     fetch("/api/dashboard/customer/orders")
@@ -68,6 +69,7 @@ export default function CustomerDashboard() {
           destLat,
           destLng,
           requiresRefrigeration,
+          isRemoteVillage,
         })
       });
       if (res.ok) {
@@ -76,6 +78,7 @@ export default function CustomerDashboard() {
         setDescription("");
         setPrice("");
         setRequiresRefrigeration(false);
+        setIsRemoteVillage(false);
         fetchOrders();
       }
     } catch (e) {
@@ -168,6 +171,13 @@ export default function CustomerDashboard() {
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-blue-400 flex items-center gap-1"><ThermometerSnowflake className="w-4 h-4"/> Perishable Cargo (IoT Cooling req.)</span>
                   <span className="text-xs text-text4">Requires vehicle with IoT temperature tracking (e.g. food/medicine)</span>
+                </div>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer mt-2 bg-green-500/10 p-3 rounded border border-green-500/30">
+                <input type="checkbox" checked={isRemoteVillage} onChange={e => setIsRemoteVillage(e.target.checked)} className="accent-green-500 w-4 h-4" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-green-400 flex items-center gap-1"><Home className="w-4 h-4"/> Remote Village / Subsidized Route</span>
+                  <span className="text-xs text-text4">Essential goods delivery to remote areas (eligible for Akimat subsidy)</span>
                 </div>
               </label>
               <div className="flex gap-2 pt-4">

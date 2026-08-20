@@ -48,6 +48,14 @@ export async function GET() {
       totalEconomicImpactKzt: (fuelSavedLiters * 295).toFixed(0) // 295 KZT per liter of diesel
     };
 
+    const subsidizedOrders = orders.filter(o => o.isRemoteVillage);
+    const subsidyBudgetUsed = subsidizedOrders.reduce((sum, o) => sum + (o.price * 0.2), 0);
+
+    const socialMetrics = {
+      subsidizedDeliveries: subsidizedOrders.length,
+      subsidyBudgetUsedKzt: subsidyBudgetUsed.toFixed(0)
+    };
+
     // Infrastructure Planning Analytics
     // Case requirement: "Акимат не видит реальной картины грузоперевозок для планирования дорог"
     // Solution: We analyze 2GIS distance vs estimated time to find "Low Speed Zones" (Bad Roads)
@@ -76,7 +84,7 @@ export async function GET() {
 
     const topBadRoads = Object.values(roadIssues).sort((a: any, b: any) => b.reports - a.reports).slice(0, 5);
 
-    return NextResponse.json({ couriers, customers, orders, ecoMetrics, badRoads: topBadRoads });
+    return NextResponse.json({ couriers, customers, orders, ecoMetrics, socialMetrics, badRoads: topBadRoads });
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

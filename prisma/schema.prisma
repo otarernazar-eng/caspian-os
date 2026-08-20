@@ -52,6 +52,7 @@ model Order {
   
   // Hackathon features
   requiresRefrigeration Boolean @default(false)
+  isRemoteVillage       Boolean @default(false)
 
   // Route Data
   routeGeometry String?  // Stores 2GIS polyline

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee } from "lucide-react";
+import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -105,9 +105,15 @@ export default function CourierDashboard() {
                <div className="flex justify-between items-start mb-4">
                  <div>
                    <div className="text-xs font-mono text-text4 mb-1">Customer: {data.activeOrder.customer.name}</div>
-                   <div className="font-semibold text-xl">{data.activeOrder.description}</div>
+                   <div className="font-semibold text-xl flex items-center gap-2">
+                     {data.activeOrder.description}
+                     {data.activeOrder.isRemoteVillage && <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded border border-green-500/30 uppercase tracking-wider">Gov Subsidy Route</span>}
+                   </div>
                  </div>
-                 <div className="text-2xl font-bold text-accentWarm">₸ {data.activeOrder.price}</div>
+                 <div className="text-right">
+                   <div className="text-2xl font-bold text-accentWarm flex items-center gap-1 justify-end">₸ {data.activeOrder.price}</div>
+                   {data.activeOrder.isRemoteVillage && <div className="text-xs text-green-400 font-mono">+ 20% Akimat Bonus</div>}
+                 </div>
                </div>
 
                <div className="space-y-3 pt-4 border-t border-border1">
@@ -229,11 +235,15 @@ export default function CourierDashboard() {
               data.pendingOrders.map((order: any) => (
                 <div key={order.id} className="card hover:border-borderH1 transition-colors">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <h3 className="font-semibold text-lg flex items-center gap-2 flex-wrap">
                       {order.description} 
                       {order.requiresRefrigeration && <ThermometerSnowflake className="w-4 h-4 text-blue-400" title="IoT Refrigeration Required" />}
+                      {order.isRemoteVillage && <Home className="w-4 h-4 text-green-400" title="Remote Village Subsidized" />}
                     </h3>
-                    <div className="text-xl font-bold text-accentWarm">₸ {order.price}</div>
+                    <div className="text-right">
+                      <div className="text-xl font-bold text-accentWarm">₸ {order.price}</div>
+                      {order.isRemoteVillage && <div className="text-[10px] text-green-400 mt-1 uppercase">+20% Subsidy</div>}
+                    </div>
                   </div>
                   
                   <div className="flex items-center gap-2 text-sm text-text3 mb-4">

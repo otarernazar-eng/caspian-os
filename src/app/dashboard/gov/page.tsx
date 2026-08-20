@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart, HardHat, ShieldCheck, Coffee } from "lucide-react";
+import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart, HardHat, ShieldCheck, Coffee, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -153,14 +153,28 @@ export default function GovernmentDashboard() {
             </div>
             
             {/* Social Responsibility: Driver Fatigue */}
-            <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-orange-400 flex items-center gap-2"><Coffee className="w-4 h-4"/> AI Driver Fatigue Monitor</div>
-                <div className="text-sm text-orange-400/80 mt-1">Platform automatically restricts orders for drivers exceeding 8 hours of active routes.</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-orange-400 flex items-center gap-2"><Coffee className="w-4 h-4"/> AI Driver Fatigue Monitor</div>
+                  <div className="text-sm text-orange-400/80 mt-1">Platform automatically restricts orders for drivers exceeding 8 hours.</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-orange-400">12%</div>
+                  <div className="text-xs text-orange-400/80">Accident Risk Prevented</div>
+                </div>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-orange-400">12%</div>
-                <div className="text-xs text-orange-400/80">Accident Risk Prevented</div>
+
+              {/* Social Responsibility: Remote Villages Subsidy */}
+              <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-green-400 flex items-center gap-2"><Home className="w-4 h-4"/> Remote Village Subsidies</div>
+                  <div className="text-sm text-green-400/80 mt-1">{data.socialMetrics?.subsidizedDeliveries || 0} essential deliveries to remote areas.</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-green-400">₸ {data.socialMetrics?.subsidyBudgetUsedKzt || 0}</div>
+                  <div className="text-xs text-green-400/80">Akimat Budget Used</div>
+                </div>
               </div>
             </div>
           </div>
