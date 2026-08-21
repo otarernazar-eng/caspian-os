@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee, Home, Package } from "lucide-react";
+import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee, Home, Package, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
 export default function CourierDashboard() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
   const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
   const router = useRouter();
 
@@ -77,6 +78,7 @@ export default function CourierDashboard() {
 
   const handleAcceptOrder = async (orderId: string) => {
     try {
+      setAcceptingId(orderId);
       const res = await fetch("/api/dashboard/courier/orders/accept", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,6 +93,8 @@ export default function CourierDashboard() {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setAcceptingId(null);
     }
   };
 
@@ -243,7 +247,9 @@ export default function CourierDashboard() {
                    </div>
                    <div className="text-right flex flex-col items-end">
                      <div className="text-lg font-bold text-text1">+ ₸ {data.smartMatchCombineOrder.price}</div>
-                     <button onClick={() => handleAcceptOrder(data.smartMatchCombineOrder.id)} className="text-xs bg-[#7CF8E5] text-bg px-3 py-1 rounded mt-1 font-bold hover:bg-[#5ae6d1]">Combine Route</button>
+                     <button onClick={() => handleAcceptOrder(data.smartMatchCombineOrder.id)} disabled={acceptingId === data.smartMatchCombineOrder.id} className="text-xs bg-[#7CF8E5] text-bg px-3 py-1 rounded mt-1 font-bold hover:bg-[#5ae6d1] flex items-center justify-center min-w-[100px]">
+                       {acceptingId === data.smartMatchCombineOrder.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Combine Route"}
+                     </button>
                    </div>
                  </div>
               </div>
@@ -266,7 +272,9 @@ export default function CourierDashboard() {
                    </div>
                    <div className="text-right flex flex-col items-end">
                      <div className="text-lg font-bold text-text1">+ ₸ {data.smartMatchOrder.price}</div>
-                     <button onClick={() => handleAcceptOrder(data.smartMatchOrder.id)} className="text-xs bg-accentWarm text-bg px-3 py-1 rounded mt-1 font-bold hover:bg-[#d49938]">Queue Order</button>
+                     <button onClick={() => handleAcceptOrder(data.smartMatchOrder.id)} disabled={acceptingId === data.smartMatchOrder.id} className="text-xs bg-accentWarm text-bg px-3 py-1 rounded mt-1 font-bold hover:bg-[#d49938] flex items-center justify-center min-w-[100px]">
+                       {acceptingId === data.smartMatchOrder.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Queue Order"}
+                     </button>
                    </div>
                  </div>
               </div>
@@ -323,9 +331,9 @@ export default function CourierDashboard() {
 
                   <button 
                     onClick={() => handleAcceptOrder(order.id)}
-                    disabled={!currentLocation}
+                    disabled={acceptingId === order.id}
                     className="btn w-full justify-center bg-text1 text-bg hover:bg-text2 hover:text-bg">
-                    Accept Order
+                    {acceptingId === order.id ? <Loader2 className="w-5 h-5 animate-spin" /> : "Accept Order"}
                   </button>
                 </div>
               ))

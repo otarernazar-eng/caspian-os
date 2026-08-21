@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home, Printer, Clock } from "lucide-react";
+import { Activity, Plus, Package, MapPin, Truck, Check, ShieldCheck, ThermometerSnowflake, Home, Printer, Clock, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -20,6 +20,19 @@ export default function CustomerDashboard() {
   const [requiresRefrigeration, setRequiresRefrigeration] = useState(false);
   const [isRemoteVillage, setIsRemoteVillage] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1586528116311-ad8ed7c50a63?auto=format&fit=crop&w=300&q=80");
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const analyzePhotoWithAI = () => {
+    setAiLoading(true);
+    setTimeout(() => {
+      setDescription("Строительная арматура (AI detected)");
+      setDestAddress("Жетыбай");
+      setPrice("45000");
+      setRequiresRefrigeration(false);
+      setIsRemoteVillage(true);
+      setAiLoading(false);
+    }, 1500);
+  };
 
   const fetchOrders = () => {
     fetch("/api/dashboard/customer/orders")
@@ -193,7 +206,9 @@ export default function CustomerDashboard() {
                 <label className="text-xs text-text4">Cargo Photo (Required)</label>
                 <div className="flex gap-2">
                   <input type="text" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2 text-xs" required />
-                  <button type="button" className="btn bg-surface2 px-2 text-xs border border-border2">📸 Use AI</button>
+                  <button type="button" onClick={analyzePhotoWithAI} disabled={aiLoading} className="btn bg-surface2 px-2 text-xs border border-border2 min-w-[80px] justify-center">
+                    {aiLoading ? <Loader2 className="w-4 h-4 animate-spin text-accentWarm" /> : "📸 Use AI"}
+                  </button>
                 </div>
               </div>
               <div className="space-y-1">
