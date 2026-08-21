@@ -22,6 +22,7 @@ export default function CustomerDashboard() {
   const [isRemoteVillage, setIsRemoteVillage] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1586528116311-ad8ed7c50a63?auto=format&fit=crop&w=300&q=80");
   const [aiLoading, setAiLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const analyzePhotoWithAI = async () => {
     if (!photoUrl) return;
@@ -71,6 +72,7 @@ export default function CustomerDashboard() {
 
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       // 1. Geocode the address using free Nominatim API to ensure REAL coordinates on land (not in the Caspian Sea)
       let destLat = 43.6481;
@@ -118,9 +120,15 @@ export default function CustomerDashboard() {
         setRequiresRefrigeration(false);
         setIsRemoteVillage(false);
         fetchOrders();
+      } else {
+        const errData = await res.json();
+        alert("Ошибка при создании заказа: " + (errData.error || "Неизвестная ошибка"));
       }
     } catch (e) {
       console.error(e);
+      alert("Сетевая ошибка при создании заказа.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -258,8 +266,10 @@ export default function CustomerDashboard() {
                 </div>
               </label>
               <div className="flex gap-2 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="btn flex-1 bg-transparent">Cancel</button>
-                <button type="submit" className="btn flex-1 bg-text1 text-bg hover:bg-text2 hover:text-bg">Create Order</button>
+                <button type="button" onClick={() => setShowModal(false)} disabled={isSubmitting} className="btn flex-1 bg-transparent">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="btn flex-1 bg-text1 text-bg hover:bg-text2 hover:text-bg">
+                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Order"}
+                </button>
               </div>
             </form>
           </div>
