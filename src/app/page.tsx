@@ -33,9 +33,6 @@ export default function LandingPage() {
               <Link href="/login" className="btn bg-accentWarm text-bg font-bold px-8 py-3 hover:bg-[#d49938] hover:-translate-y-1 transition-all">
                 Launch Platform
               </Link>
-              <Link href="/ai-scanner" className="btn bg-surface2 border border-[#7CF8E5]/30 text-[#7CF8E5] font-bold px-8 py-3 hover:bg-[#7CF8E5]/10 hover:-translate-y-1 transition-all flex items-center gap-2">
-                <Scan className="w-5 h-5" /> AI Camera
-              </Link>
             </div>
           </div>
         </div>
