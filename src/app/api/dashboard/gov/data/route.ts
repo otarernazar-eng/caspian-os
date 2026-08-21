@@ -84,7 +84,12 @@ export async function GET() {
 
     const topBadRoads = Object.values(roadIssues).sort((a: any, b: any) => b.reports - a.reports).slice(0, 5);
 
-    return NextResponse.json({ couriers, customers, orders, ecoMetrics, socialMetrics, badRoads: topBadRoads });
+    const trafficData = await prisma.trafficData.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10
+    });
+
+    return NextResponse.json({ couriers, customers, orders, ecoMetrics, socialMetrics, badRoads: topBadRoads, trafficData });
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }

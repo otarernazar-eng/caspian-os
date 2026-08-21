@@ -12,7 +12,7 @@ const parseWKT = (wkt: string): number[][] => {
   });
 };
 
-export default function LogisticsMap({ orders }: { orders: any[] }) {
+export default function LogisticsMap({ orders = [], traffic = [] }: { orders: any[], traffic?: any[] }) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
 
@@ -24,7 +24,7 @@ export default function LogisticsMap({ orders }: { orders: any[] }) {
     load().then((mapglAPI) => {
       map = new mapglAPI.Map(mapContainer.current!, {
         center: [51.1983, 43.6481], // [lng, lat] (Aktau region as default)
-        zoom: 6,
+        zoom: 11,
         key: process.env.TWOGIS_API_KEY || "09ce5faf-9ec3-47c1-8329-9560c544c79f", // Same key for map & routing
         // Dark theme map style UUID for 2GIS
         style: "c080bb6a-8134-4993-93a1-5b4d8c36a59b",
@@ -84,6 +84,22 @@ export default function LogisticsMap({ orders }: { orders: any[] }) {
               ]);
             }
           }
+        }
+      });
+
+      // Draw AI Traffic Nodes
+      traffic?.forEach((t) => {
+        if (t.lat && t.lng) {
+          const color = t.congestionLevel === 'HIGH' ? '#ef4444' : t.congestionLevel === 'MEDIUM' ? '#eab308' : '#22c55e';
+          new mapglAPI.Marker(map, {
+            coordinates: [t.lng, t.lat],
+            label: {
+              text: `📷 Traffic: ${t.congestionLevel} (${t.carCount} cars)`,
+              color: color,
+              haloColor: '#1e1e1e',
+              haloRadius: 1,
+            }
+          });
         }
       });
     });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart, HardHat, ShieldCheck, Coffee, Home } from "lucide-react";
+import { Activity, Users, Truck, Route, DollarSign, Leaf, Zap, BarChart, HardHat, ShieldCheck, Coffee, Home, Camera } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 
@@ -180,6 +180,34 @@ export default function GovernmentDashboard() {
           </div>
         )}
 
+        {/* AI Computer Vision Traffic Control */}
+        {data.trafficData && data.trafficData.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Camera className="w-5 h-5 text-text3" /> Live City Traffic (Computer Vision)
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {data.trafficData.slice(0, 3).map((t: any, idx: number) => (
+                <div key={idx} className={`card ${t.congestionLevel === 'HIGH' ? 'border-red-500/50 bg-red-500/5' : t.congestionLevel === 'MEDIUM' ? 'border-yellow-500/50 bg-yellow-500/5' : 'border-green-500/50 bg-green-500/5'}`}>
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="font-semibold">{t.location}</div>
+                    <div className={`text-[10px] px-2 py-1 rounded font-bold ${t.congestionLevel === 'HIGH' ? 'bg-red-500/20 text-red-500' : t.congestionLevel === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-green-500/20 text-green-500'}`}>
+                      {t.congestionLevel}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-text4">Cars detected:</span>
+                    <span className="font-bold text-lg">{t.carCount}</span>
+                  </div>
+                  <div className="text-[10px] text-text4 text-right mt-2">
+                    Updated: {new Date(t.createdAt).toLocaleTimeString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Orders / Trade Routes */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold flex items-center gap-2">
@@ -223,7 +251,7 @@ export default function GovernmentDashboard() {
         </div>
 
         <div className="card p-0 overflow-hidden h-[500px]">
-           <LogisticsMap orders={data.orders} />
+           <LogisticsMap orders={data.orders} traffic={data.trafficData} />
         </div>
 
       </main>

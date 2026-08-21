@@ -93,3 +93,13 @@ model Transaction {
   status    String   // COMPLETED, PENDING
   createdAt DateTime @default(now())
 }
+
+model TrafficData {
+  id               String   @id @default(uuid())
+  location         String
+  lat              Float
+  lng              Float
+  carCount         Int
+  congestionLevel  String   // LOW, MEDIUM, HIGH
+  createdAt        DateTime @default(now())
+}
