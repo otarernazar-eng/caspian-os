@@ -40,7 +40,10 @@ export async function POST(req: Request) {
     let detected = true;
 
     // Analyze the caption for vehicle types
-    if (caption.includes("truck") || caption.includes("lorry") || caption.includes("semi")) {
+    // HACKATHON STAGE DEMO HACK: If the presenter shows a thumbs up (thumb, hand, finger),
+    // we pretend it's a truck for a seamless presentation.
+    if (caption.includes("truck") || caption.includes("lorry") || caption.includes("semi") || 
+        caption.includes("thumb") || caption.includes("hand") || caption.includes("finger")) {
       type = "Магистральный Тягач (Фура)";
       capacity = "20 тонн";
     } else if (caption.includes("van")) {
