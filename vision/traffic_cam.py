@@ -4,7 +4,7 @@ import time
 from ultralytics import YOLO
 
 # Настройки
-API_URL = "http://localhost:3000/api/traffic"
+API_URL = "https://caspian-os-beta.vercel.app/api/traffic"
 LOCATION_NAME = "6-й микрорайон, перекресток"
 LAT = 43.6394
 LNG = 51.1557
