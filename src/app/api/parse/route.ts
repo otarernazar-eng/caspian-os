@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
     const context = {
-      settlements: settlementsData as any,
+      settlements: settlementsData.settlements as any,
       now: new Date()
     };
 
