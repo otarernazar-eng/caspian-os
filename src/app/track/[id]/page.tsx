@@ -68,7 +68,8 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
               LIVE SATELLITE SYNC
             </div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">RAYCAST</h1>
-          <div className="text-text4 font-mono text-sm uppercase">Tracking Code: {order.id.slice(0, 8)}</div>
+            <div className="text-text4 font-mono text-sm uppercase">Tracking Code: {order.id.slice(0, 8)}</div>
+          </div>
           
           <div className="mt-6 flex flex-col items-center gap-2">
             <h2 className="text-2xl font-semibold text-accentWarm">{order.description}</h2>

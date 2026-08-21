@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee, Home } from "lucide-react";
+import { Activity, MapPin, Navigation, DollarSign, Check, Sparkles, CloudRainWind, ShieldCheck, ThermometerSnowflake, Coffee, Home, Package } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LogisticsMap from "@/components/LogisticsMap";
 

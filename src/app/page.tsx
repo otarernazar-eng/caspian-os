@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Map, Cpu, Truck, LayoutDashboard } from "lucide-react";
+import CaspianEcoWidget from "@/components/CaspianEcoWidget";
+import CaspianSmartDispatch from "@/components/CaspianSmartDispatch";
 
 export default function LandingPage() {
   return (
@@ -13,17 +15,17 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-text1 leading-tight mb-6">
-            RayCast
+            Caspian OS
           </h1>
           <h2 className="text-[32px] md:text-[48px] font-medium text-text2 italic leading-tight">
-            Оптимизация логистики<br/>
+            Интеллектуальная логистика<br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7CF8E5] to-[#C3FBFF] not-italic">
-              последнего километра.
+              обратных рейсов.
             </span>
           </h2>
           
           <p className="text-text3 text-lg md:text-xl max-w-2xl mx-auto mt-6">
-            Платформа для внутрирегиональных грузоперевозок: отслеживание автопарка в реальном времени, биржа перевозчиков и маршрутизация до отдалённых посёлков.
+            Платформа для внутрирегиональных грузоперевозок. Мы не ищем перевозчика — мы монетизируем обратный путь и спасаем километры пустого пробега.
           </p>
 
           <div className="pt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -36,27 +38,33 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Caspian Intelligence Showcase */}
+        <div className="w-full max-w-5xl mt-32 grid grid-cols-1 lg:grid-cols-2 gap-8 text-left animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <CaspianSmartDispatch />
+          <CaspianEcoWidget />
+        </div>
+
         {/* Core Capabilities */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-32 max-w-5xl text-left animate-fade-in" style={{ animationDelay: '300ms' }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-5xl text-left animate-fade-in" style={{ animationDelay: '400ms' }}>
           <div className="card group">
             <div className="card__aura bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_50%)]"></div>
             <Truck className="w-8 h-8 text-accentWarm mb-6" />
-            <h3 className="text-xl font-semibold text-text1 mb-2">БИРЖА ПЕРЕВОЗОК</h3>
-            <p className="text-text3 text-sm">Грузоотправители размещают заявки, перевозчики берут заказы. Без звонков и простоев.</p>
+            <h3 className="text-xl font-semibold text-text1 mb-2">МАТЧИНГ ПО КОРИДОРАМ</h3>
+            <p className="text-text3 text-sm">Грузы ищутся не "от точки к точке", а вдоль коридора возвращения перевозчика.</p>
           </div>
           
           <div className="card group">
             <div className="card__aura bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_50%)]"></div>
             <Map className="w-8 h-8 text-accentWarm mb-6" />
-            <h3 className="text-xl font-semibold text-text1 mb-2">GPS-ОТСЛЕЖИВАНИЕ</h3>
-            <p className="text-text3 text-sm">Мониторинг статуса доставки и местоположения грузов в реальном времени на карте.</p>
+            <h3 className="text-xl font-semibold text-text1 mb-2">РЕАЛЬНАЯ ТОПОЛОГИЯ</h3>
+            <p className="text-text3 text-sm">Матрица на 2080 дорожных расстояний из OSRM для точного расчета экономики.</p>
           </div>
 
           <div className="card group">
             <div className="card__aura bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_50%)]"></div>
             <LayoutDashboard className="w-8 h-8 text-accentWarm mb-6" />
             <h3 className="text-xl font-semibold text-text1 mb-2">АНАЛИТИКА ДЛЯ АКИМАТА</h3>
-            <p className="text-text3 text-sm">Дашборд грузопотоков для планирования дорог и субсидирования отдалённых посёлков.</p>
+            <p className="text-text3 text-sm">Дашборд сэкономленного топлива и грузопотоков для прозрачности перед государством.</p>
           </div>
         </div>
 

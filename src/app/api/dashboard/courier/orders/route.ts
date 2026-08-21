@@ -26,8 +26,8 @@ export async function GET() {
     });
 
     // 3. Smart Match Algorithm: Find return cargo and combined cargo (Real DB query)
-    let smartMatchReturnOrder = null;
-    let smartMatchCombineOrder = null;
+    let smartMatchReturnOrder: any = null;
+    let smartMatchCombineOrder: any = null;
 
     if (activeOrder) {
       const allPending = await prisma.order.findMany({
