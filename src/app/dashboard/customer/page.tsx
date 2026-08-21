@@ -17,6 +17,7 @@ export default function CustomerDashboard() {
   const [destAddress, setDestAddress] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [weightTons, setWeightTons] = useState("");
   const [requiresRefrigeration, setRequiresRefrigeration] = useState(false);
   const [isRemoteVillage, setIsRemoteVillage] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1586528116311-ad8ed7c50a63?auto=format&fit=crop&w=300&q=80");
@@ -96,6 +97,7 @@ export default function CustomerDashboard() {
           destAddress,
           description,
           price,
+          weightTons,
           destLat,
           destLng,
           requiresRefrigeration,
@@ -112,6 +114,7 @@ export default function CustomerDashboard() {
         setDestAddress("");
         setDescription("");
         setPrice("");
+        setWeightTons("");
         setRequiresRefrigeration(false);
         setIsRemoteVillage(false);
         fetchOrders();
@@ -230,9 +233,15 @@ export default function CustomerDashboard() {
                 <label className="text-xs text-text4">Destination Address (Point B)</label>
                 <input type="text" value={destAddress} onChange={e => setDestAddress(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2" required placeholder="Full address" />
               </div>
-              <div className="space-y-1">
-                <label className="text-xs text-text4">Price (₸)</label>
-                <input type="number" value={price} onChange={e => setPrice(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2" required min="100" />
+              <div className="flex gap-4">
+                <div className="space-y-1 flex-1">
+                  <label className="text-xs text-text4">Price (₸)</label>
+                  <input type="number" value={price} onChange={e => setPrice(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2" required min="100" />
+                </div>
+                <div className="space-y-1 flex-1">
+                  <label className="text-xs text-text4">Weight (Tons)</label>
+                  <input type="number" step="0.1" value={weightTons} onChange={e => setWeightTons(e.target.value)} className="w-full bg-surface2 border border-border2 rounded p-2" required min="0.1" placeholder="e.g. 1.5" />
+                </div>
               </div>
               <label className="flex items-center gap-2 cursor-pointer mt-2 bg-blue-500/10 p-3 rounded border border-blue-500/30">
                 <input type="checkbox" checked={requiresRefrigeration} onChange={e => setRequiresRefrigeration(e.target.checked)} className="accent-blue-500 w-4 h-4" />
