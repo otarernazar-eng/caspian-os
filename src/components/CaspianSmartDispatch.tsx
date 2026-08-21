@@ -11,18 +11,21 @@ export default function CaspianSmartDispatch() {
   const handleParse = async () => {
     if (!text) return;
     setIsParsing(true);
-    // Simulate AI parsing delay or call real endpoint
-    setTimeout(() => {
-      // Mocking the result of lib/ai/parse-order for UI demonstration
-      setParsedData({
-        origin: "Актау",
-        destination: "Шетпе",
-        cargo: "кирпич",
-        weight: "5000",
-        type: "rules" // or 'ai'
+    try {
+      const res = await fetch("/api/parse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
       });
+      if (res.ok) {
+        const data = await res.json();
+        setParsedData(data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
       setIsParsing(false);
-    }, 1200);
+    }
   };
 
   return (
