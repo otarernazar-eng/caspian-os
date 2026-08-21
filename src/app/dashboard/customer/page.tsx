@@ -22,16 +22,27 @@ export default function CustomerDashboard() {
   const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1586528116311-ad8ed7c50a63?auto=format&fit=crop&w=300&q=80");
   const [aiLoading, setAiLoading] = useState(false);
 
-  const analyzePhotoWithAI = () => {
+  const analyzePhotoWithAI = async () => {
+    if (!photoUrl) return;
     setAiLoading(true);
-    setTimeout(() => {
-      setDescription("Строительная арматура (AI detected)");
-      setDestAddress("Жетыбай");
-      setPrice("45000");
-      setRequiresRefrigeration(false);
-      setIsRemoteVillage(true);
+    try {
+      const res = await fetch("/api/parse/vision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ photoUrl })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDescription(data.description);
+        setRequiresRefrigeration(data.requiresRefrigeration);
+        // We explicitly DO NOT set price, destAddress, or isRemoteVillage 
+        // so the human has to fill them out manually.
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
       setAiLoading(false);
-    }, 1500);
+    }
   };
 
   const fetchOrders = () => {
